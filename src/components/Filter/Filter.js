@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Filter.module.css'
+import { connect } from 'react-redux';
+import phonebookActions from '../../redux/phonebook/phonebook-actions'
 const Filter = ({ filter, handleChange }) => {
+
     return (
         <label>
             Find contacts by name
@@ -15,8 +18,15 @@ const Filter = ({ filter, handleChange }) => {
         </label>
     );
 };
+const mapStateToProps = state => ({
+    filter: state.filter
+})
 
-export default Filter;
+const mapDispatchToProps = dispatc => ({
+    handleChange: e => dispatc(phonebookActions.changeFilter(e.target.value))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);
 
 Filter.propTypes = {
     filter: PropTypes.string.isRequired,
