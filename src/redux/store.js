@@ -33,7 +33,7 @@ const persistedReducer=persistReducer(persistConfig, rootReducer);
 const store = configureStore({
     reducer: persistedReducer,
     devTools: process.env.NODE_ENV === 'development', /// devtools only in developmetn
-    middleware:process.env.NODE_ENV === 'development'? middleware:defaultmiddleware,
+    middleware,
 })
 const persistor=persistStore(store)
 export default { store, persistor };
