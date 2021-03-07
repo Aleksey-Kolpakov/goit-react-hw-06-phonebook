@@ -1,37 +1,39 @@
-import { createStore, combineReducers } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension'
-import actionTypes from './phonebook/phonebook-types'
-const initialState = {
-    contacts: [
-        { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-        { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-        { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-        { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-}
-const contactReducer = (state = initialState.contacts, { type, payload }) => {
-    switch (type) {
-        case actionTypes.ADD:
-            return [payload, ...state];
-        case actionTypes.DELETE:
-            return state.filter(contact => contact.id !== payload)
-        default:
-            return state;
-    }
-}
-const filterReducer = (state = "", { type, payload }) => {
-    switch (type) {
-        case actionTypes.CHANGE_FILTER:
-            return payload;
-        default:
-            return state;
-    }
-}
+// import { createStore, combineReducers } from 'redux';
+// import { composeWithDevTools } from 'redux-devtools-extension'
+import logger from 'redux-logger';
+import { contactReducer, filterReducer } from './phonebook/phonebook-reducer'
+import { configureStore, getDefaultMiddleware,combineReducers} from '@reduxjs/toolkit'
+import { persistStore, persistReducer,FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER, } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+
+const defaultmiddleware = getDefaultMiddleware({
+    serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+});
+
+const middleware=[...defaultmiddleware,logger]
 const rootReducer = combineReducers({
     contacts: contactReducer,
     filter: filterReducer
 })
-const rootReducer1 = (state = initialState, action) => state;
-const store = createStore(rootReducer, composeWithDevTools());
-export default store;
+
+const persistConfig = {
+  key: 'phoneBook',
+    storage,
+  blacklist: ['filter'],
+}
+const persistedReducer=persistReducer(persistConfig, rootReducer);
+// const store = createStore(rootReducer, composeWithDevTools());
+const store = configureStore({
+    reducer: persistedReducer,
+    devTools: process.env.NODE_ENV === 'development', /// devtools only in developmetn
+    middleware:process.env.NODE_ENV === 'development'? middleware:defaultmiddleware,
+})
+const persistor=persistStore(store)
+export default { store, persistor };

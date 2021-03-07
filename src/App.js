@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { v4 as randId } from 'uuid';
 import ContactForm from './components/ContactForm/ContactForm';
 import Filter from './components/Filter/Filter';
 import ContactList from './components/ContactList/ContactList';
@@ -7,53 +6,14 @@ import styles from './App.module.css';
 import { connect } from 'react-redux';
 import phonebookActions from './redux/phonebook/phonebook-actions'
 class App extends Component {
-  // state = {
-  //   contacts: [
-  //     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  //     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  //     { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  //     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  //   ],
-  //   filter: '',
-  // }
-
-  // addContactToState = (contact) => {
-  //   this.setState(prevState => ({
-  //     contacts: [contact, ...prevState.contacts]
-  //   }))
-  // }
-
-  // deleteContact = (id) => {
-  //   this.setState(prevState => ({
-  //     contacts: prevState.contacts.filter(contact => contact.id !== id)
-  //   }))
-
-  // }
-  // componentDidMount() {
-  //   if (localStorage.getItem('contacts')) {
-  //     const contactsJson = localStorage.getItem('contacts');
-  //     const contacts = JSON.parse(contactsJson);
-  //     this.setState(prevState => ({
-  //       contacts: contacts
-  //     }))
-  //   }
-  // }
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { contacts } = this.state;
-  //   if (prevState.contacts !== contacts) {
-  //     localStorage.setItem('contacts', JSON.stringify(contacts));
-  //   }
-  // }
   render() {
-    const { contacts, filter } = this.props;
-    const visibleContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
     return (
       <div className={styles.container} >
         <h1>Phonebook</h1>
-        <ContactForm contacts={contacts} addContactToState={this.props.addContactToState} />
+        <ContactForm />
         <h2>Contacts</h2>
         <Filter />
-        <ContactList visibleContacts={visibleContacts} deleteContact={this.props.deleteContact} />
+        <ContactList />
       </div >
     );
   }

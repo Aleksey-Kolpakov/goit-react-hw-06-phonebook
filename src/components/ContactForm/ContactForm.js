@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { v4 as randId } from 'uuid';
 import PropTypes from 'prop-types';
+import phonebookActions from '../../redux/phonebook/phonebook-actions'
 import styles from "./ContactForm.module.css"
 class ContactForm extends Component {
     state = {
@@ -13,7 +15,6 @@ class ContactForm extends Component {
             [name]: value
         })
     };
-
     resetForm = () => {
         this.setState({
             name: '',
@@ -64,14 +65,18 @@ class ContactForm extends Component {
                         onChange={this.handleChange}
                     />
                 </label>
-
                 <button className={styles.button} type="submit">Add contact</button>
             </form>
         );
     }
 }
-
-export default ContactForm;
+const mapStateToProps = state => ({
+    contacts:state.contacts,
+})
+const mapDispatchToProps = dispatch => ({
+    addContactToState: contact => dispatch(phonebookActions.addContact(contact)),
+})
+export default connect(mapStateToProps,mapDispatchToProps)(ContactForm);
 
 ContactForm.propTypes = {
     contacts: PropTypes.arrayOf(PropTypes.shape()).isRequired,
